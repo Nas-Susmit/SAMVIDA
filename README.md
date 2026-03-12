@@ -46,7 +46,8 @@ pip install -r requirements.txt
 cp .env.example .env       # add your API keys
 uvicorn main:app --reload
 
-## Frontend Setup (Chat UI)
+### Frontend Setup (Chat UI)
+```bash
 
 cd frontend
 npm install
@@ -54,7 +55,7 @@ npm start
 
 Open http://localhost:3000 and start chatting with the bot.
 
-## Environment Variables
+### Environment Variables
 
 Create a .env file in backend/:
 GEMINI_API_KEY=your_key
@@ -62,7 +63,7 @@ GROQ_API_KEY=your_key
 GITHUB_TOKEN=your_token
 GITHUB_REPO_URL=https://github.com/yourusername/your-repo.git
 
-## 📖 Usage
+### 📖 Usage
 Type commands in the chat interface:
 
 /start Build a task manager... – initialise a project.
@@ -75,7 +76,7 @@ Type commands in the chat interface:
 
 /status – check artifact timestamps.
 
-## 🤖 How It Works
+### 🤖 How It Works
 
 1. User submits requirements.
 
@@ -90,7 +91,7 @@ Type commands in the chat interface:
 6. All artifacts are saved locally and committed to GitHub.
 
 
-## 🧪 Testing the Generated Project
+### 🧪 Testing the Generated Project
 
 After /rerun dev, navigate to workspace/ and run:
 
@@ -103,10 +104,11 @@ cd workspace/frontend
 npm install
 npm start
 
-## 📊 Visual Dashboard with n8n
+### 📊 Visual Dashboard with n8n
 
 For a visual representation of the agent workflow, import the provided n8n workflow (see n8n/ folder) and run it with Docker.
 
-## 👥 Contributors
+### 👥 Contributors
 
 Susmit Naskar [Github: Nas-Susmit]
+
