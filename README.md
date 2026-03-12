@@ -1,120 +1,91 @@
-```markdown
-# SAMVIDA – AI-Driven Collaborative Software Development Pod
 
-SAMVIDA is an AI-powered multi-agent system that simulates a collaborative software development team.  
-Given a plain-English project idea, SAMVIDA automatically transforms it into **structured user stories, system architecture, production-ready code, and automated tests** within minutes.
+# **SAMVIDA – AI-DRIVEN COLLABORATIVE SOFTWARE DEVELOPMENT POD**
 
-The platform orchestrates multiple specialized AI agents that work together to replicate the **Software Development Life Cycle (SDLC)**. Each agent performs a specific role such as requirement analysis, architecture design, development, and testing.
+samvida is an ai-driven multi-agent system designed to simulate a collaborative software development team. the platform takes a plain-english project requirement and automatically converts it into structured development artifacts such as user stories, system architecture, full-stack application code, and automated tests.
 
-The system is built with a **FastAPI backend, React frontend, AI agent orchestration, and automated GitHub integration**, making it capable of generating and managing complete software projects autonomously.
+the goal of samvida is to demonstrate how ai agents can coordinate together to automate different stages of the software development life cycle (sdlc). each agent is responsible for a specific role such as requirement analysis, system design, development, and testing.
 
----
-
-# ✨ Features
-
-### Multi-Agent Orchestration
-SAMVIDA coordinates multiple specialized AI agents that simulate a real development team:
-
-- **Business Analyst Agent** – Converts requirements into structured user stories.
-- **Design Architect Agent** – Generates system architecture and technical design.
-- **Developer Agent** – Produces full-stack code based on the architecture.
-- **Testing Agent** – Performs code analysis and generates automated tests.
-
-### AI-Powered Artifact Generation
-SAMVIDA uses modern Large Language Models to generate realistic software artifacts including:
-
-- Requirements analysis
-- User stories
-- Architecture documentation
-- Production-ready code
-- Automated test cases
-
-The system integrates **Google Gemini models with Groq as a fallback provider** to ensure reliable AI responses.
-
-### Full-Stack Code Generation
-The platform generates a complete application stack:
-
-Backend
-- FastAPI
-- SQLAlchemy ORM
-- REST APIs
-- Modular project structure
-
-Frontend
-- React
-- Component-based architecture
-- API integration with backend
-
-### Automated Testing
-SAMVIDA automatically generates and executes tests for the generated application.
-
-Testing frameworks used:
-- **Pytest** for backend testing
-- **Jest** for frontend testing
-
-This ensures the generated code is **validated and production-ready**.
-
-### GitHub Integration
-All generated artifacts are automatically committed and pushed to GitHub.  
-This provides:
-
-- Version control
-- Automatic project repository creation
-- Traceability of AI-generated development artifacts
-
-### Interactive Chat Interface
-Users can interact with SAMVIDA using a **chat-based interface** built with React.
-
-Optional integrations include:
-
-- Telegram bot interface
-- Workflow visualization using n8n
+the system integrates a fastapi backend, a react chat interface, ai model integration, and automated github commits to generate and manage complete software projects with minimal human intervention.
 
 ---
 
-# 🏗️ Project Structure
+# **FEATURES**
 
-```
+• multi-agent orchestration  
+specialized ai agents simulate real software development roles including business analysis, architecture design, development, and testing.
 
-samvida/
-├── backend/                     # SAMVIDA backend (FastAPI, AI agents, test runner)
-│   ├── agents.py                # AI agent implementations
-│   ├── bot.py                   # Project Lead Bot orchestrating agents
-│   ├── database.py              # SQLite database models
-│   ├── github_integration.py    # GitHub commit and push automation
-│   ├── test_runner.py           # Automated test execution system
-│   ├── main.py                  # FastAPI entry point
-│   └── requirements.txt
-│
-├── frontend/                    # React chat interface
-│   ├── public/
-│   ├── src/
-│   └── package.json
-│
-├── templates/                   # Markdown templates for AI-generated artifacts
-│
-├── workspace/                   # Generated projects (auto-created, gitignored)
-│
-└── README.md
+• ai-powered artifact generation  
+ai models generate development artifacts including requirements interpretation, user stories, architecture design, code, and testing reports.
 
-````
+• full-stack application generation  
+the system generates both backend and frontend code structures.
 
----
+backend technologies  
+- fastapi  
+- sqlalchemy  
+- rest api architecture  
 
-# 🚀 Quick Start
+frontend technologies  
+- react  
+- component-based structure  
+- api integration with backend services  
 
-## Prerequisites
+• automated testing  
+samvida automatically generates test cases and validates generated code using testing frameworks.
 
-Ensure the following are installed on your system:
+testing frameworks used  
+- pytest for backend testing  
+- jest for frontend testing  
 
-- Python **3.10+**
-- Node.js **18+**
-- Git
-- (Optional) Docker for running n8n workflows
+• github integration  
+all generated artifacts can be automatically committed and pushed to a github repository, enabling version control and project tracking.
+
+• interactive chat interface  
+users interact with samvida through a react-based chat interface that allows them to provide requirements and monitor the development process.
 
 ---
 
-# Backend Setup
+# **PROJECT STRUCTURE**
+
+- samvida/
+
+- backend/  
+  - agents.py – implementation of ai development agents  
+  - bot.py – orchestration logic for coordinating agents  
+  - database.py – sqlite database models  
+  - github_integration.py – handles github commits and pushes  
+  - test_runner.py – executes generated tests  
+  - main.py – fastapi application entry point  
+  - requirements.txt – backend dependencies  
+
+- frontend/  
+  - public/ – static assets  
+  - src/ – react application source code  
+  - package.json – frontend dependencies and scripts  
+
+- templates/  
+  - markdown templates used for generating structured artifacts such as user stories and design documents  
+
+- workspace/  
+  - directory where generated projects are stored during execution  
+
+- README.md  
+  - project documentation  
+
+---
+
+# **QUICK START**
+
+### prerequisites
+
+- python 3.10 or higher  
+- node.js 18 or higher  
+- git  
+- optional: docker for running workflow automation tools  
+
+---
+
+# **BACKEND SETUP**
 
 ```bash
 cd backend
@@ -122,26 +93,22 @@ cd backend
 python -m venv venv
 
 source venv/bin/activate
-# Windows: venv\Scripts\activate
+# windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 
 cp .env.example .env
 
-# Add your API keys inside .env
-
 uvicorn main:app --reload
 ````
 
-The backend server will start at:
+the backend server will run at:
 
-```
-http://localhost:8000
-```
+[http://localhost:8000](http://localhost:8000)
 
 ---
 
-# Frontend Setup (Chat Interface)
+# **FRONTEND SETUP**
 
 ```bash
 cd frontend
@@ -151,122 +118,85 @@ npm install
 npm start
 ```
 
-Open your browser and navigate to:
+open the browser and navigate to:
 
-```
-http://localhost:3000
-```
+[http://localhost:3000](http://localhost:3000)
 
-You can now interact with SAMVIDA using the chat interface.
+this launches the samvida chat interface.
 
 ---
 
-# Environment Variables
+# **ENVIRONMENT VARIABLES**
 
-Create a `.env` file inside the **backend/** directory.
+create a `.env` file inside the backend directory and configure the following variables:
 
 ```
-GEMINI_API_KEY=your_gemini_key
-
-GROQ_API_KEY=your_groq_key
-
-GITHUB_TOKEN=your_github_token
-
+GEMINI_API_KEY=your_key
+GROQ_API_KEY=your_key
+GITHUB_TOKEN=your_token
 GITHUB_REPO_URL=https://github.com/yourusername/your-repo.git
 ```
 
-These keys enable:
-
-* AI model interaction
-* GitHub repository automation
-* Artifact generation
+these credentials allow samvida to communicate with ai models and push generated artifacts to github.
 
 ---
 
-# 📖 Usage
+# **USAGE**
 
-You can interact with SAMVIDA using chat commands.
+the system can be controlled through commands within the chat interface.
 
-Example commands:
+example commands:
 
 ```
-/start Build a task manager application
+/start build a task manager application
 ```
 
-Initializes a new project pipeline.
+initializes the development pipeline for a new project.
 
 ```
 /show user_stories
 ```
 
-Displays generated user stories.
+displays the generated user stories.
 
 ```
 /rerun design
 ```
 
-Regenerates the architecture design.
+regenerates the architecture design.
 
 ```
 /run_tests
 ```
 
-Runs automated tests for the generated code.
+executes tests for the generated project.
 
 ```
 /status
 ```
 
-Shows the status and timestamps of generated artifacts.
+displays the status of generated artifacts.
 
 ---
 
-# 🤖 How It Works
+# **WORKFLOW OVERVIEW**
 
-SAMVIDA follows a structured multi-agent workflow that mirrors a real software development process.
+samvida follows a structured ai-driven development pipeline.
 
-### 1. Requirement Input
-
-The user submits a plain-English project idea through the chat interface.
-
-### 2. Business Analyst Agent
-
-The requirement is analyzed and converted into structured **user stories** representing functional requirements.
-
-### 3. Design Architect Agent
-
-The user stories are transformed into **system architecture**, defining:
-
-* Application structure
-* Technology stack
-* Component interactions
-
-### 4. Developer Agent
-
-Using the architecture specification, the developer agent generates:
-
-* Backend APIs
-* Database models
-* Frontend components
-* Project configuration
-
-### 5. Testing Agent
-
-The generated code is analyzed for potential issues and **automated test cases** are created.
-
-### 6. GitHub Commit
-
-All generated artifacts are stored locally and automatically committed to the configured GitHub repository.
+1. the user submits a project requirement.
+2. the business analyst agent converts the requirement into structured user stories.
+3. the design agent generates system architecture and technical design.
+4. the developer agent produces full-stack application code.
+5. the testing agent analyzes the generated code and creates automated tests.
+6. generated artifacts are stored locally and optionally committed to github.
 
 ---
 
-# 🧪 Testing the Generated Project
+# **TESTING THE GENERATED PROJECT**
 
-After running the development pipeline, a generated project will appear inside the **workspace/** directory.
+after running the development pipeline, the generated project will appear inside the workspace directory.
 
-To run the generated application:
-
-Backend:
+to run the generated backend:
 
 ```bash
 cd workspace/backend
@@ -276,7 +206,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-Frontend:
+to run the generated frontend:
 
 ```bash
 cd workspace/frontend
@@ -286,40 +216,22 @@ npm install
 npm start
 ```
 
-This launches the full generated application locally.
+this launches the generated full-stack application locally.
 
 ---
 
-# 📊 Visual Workflow Dashboard (Optional)
+# **VISUAL WORKFLOW WITH N8N**
 
-SAMVIDA also supports visual workflow monitoring using **n8n automation workflows**.
+samvida also supports workflow visualization using n8n automation pipelines.
 
-The workflow demonstrates how AI agents interact across the development lifecycle including:
-
-* Requirement analysis
-* User story generation
-* Architecture creation
-* Code generation
-* Automated testing
-* Artifact logging
-
-To run the workflow:
-
-1. Import the provided workflow file into n8n.
-2. Configure API credentials.
-3. Execute the workflow to observe the agent pipeline.
+the workflow demonstrates how ai agents collaborate across multiple stages of the software development life cycle, including requirement analysis, design generation, code creation, and automated testing.
 
 ---
 
-# 👥 Contributors
+# **CONTRIBUTOR**
 
-**Susmit Naskar**
-
-GitHub
-[https://github.com/Nas-Susmit](https://github.com/Nas-Susmit)
+susmit naskar
+github: [https://github.com/Nas-Susmit](https://github.com/Nas-Susmit)
 
 ```
 
-
-These **increase the chances of recruiters noticing your repo.**
-```
