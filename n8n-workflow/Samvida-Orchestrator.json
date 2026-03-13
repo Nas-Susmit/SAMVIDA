@@ -1,1 +1,725 @@
-
+{
+  "name": "SAMVIDA ORCHESTRATOR",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1856,
+        -400
+      ],
+      "id": "26b54742-40db-4186-8162-9c39ef96f51d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.choices[0].message.content;\n\n// extract JSON block\nconst jsonMatch = text.match(/\\{[\\s\\S]*\\}/);\n\nlet parsed = {};\n\nif (jsonMatch) {\n  parsed = JSON.parse(jsonMatch[0]);\n}\n\nreturn [\n  {\n    json: parsed\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1232,
+        -400
+      ],
+      "id": "adf415be-5c9b-4e25-8308-a9f6d5ae930c",
+      "name": "Parse User Stories",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.choices[0].message.content;\n\nreturn [\n {\n  json: { design: text }\n }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        -400
+      ],
+      "id": "d4d56342-15df-4d14-a028-2aa54ab31a33",
+      "name": "Parse Design"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"model\": \"llama-3.3-70b-versatile\",\n \"messages\":[\n  {\n   \"role\":\"system\",\n   \"content\":\"You are a software architect designing systems.\"\n  },\n  {\n   \"role\":\"user\",\n   \"content\":\"Using these user stories {{$json.stories}}, design system architecture, database schema, APIs and UI components. Return JSON.\"\n  }\n ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -992,
+        -400
+      ],
+      "id": "16c0270e-3adb-4037-a20f-0938394eb8f8",
+      "name": "🏗 Design Architect Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type ",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"model\": \"llama-3.3-70b-versatile\",\n \"messages\": [\n  {\n   \"role\": \"system\",\n   \"content\": \"You are a professional Business Analyst. Convert software requirements into structured user stories.\"\n  },\n  {\n   \"role\": \"user\",\n   \"content\": \"Requirement: {{$json.requirements}}. Return JSON in this format: {\\\"stories\\\":[{\\\"id\\\":1,\\\"role\\\":\\\"user\\\",\\\"action\\\":\\\"...\\\",\\\"benefit\\\":\\\"...\\\",\\\"priority\\\":\\\"high\\\"}]}\"\n  }\n ],\n \"temperature\": 0.2\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1440,
+        -400
+      ],
+      "id": "6c01cc2d-7955-478e-a820-dba13ab697b5",
+      "name": "🧠 Business Analyst Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \nJSON.stringify({\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a senior fullstack developer.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": `Using the following system design:\\n\\n${$json.design}\\n\\nGenerate React + Node.js code for a task manager. Return JSON.`\n    }\n  ],\n  \"temperature\": 0.3,\n  \"response_format\": { \"type\": \"json_object\" }\n}) \n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -592,
+        -400
+      ],
+      "id": "5b1138aa-867f-4c1e-bc1f-116debba0307",
+      "name": "Developer Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.choices[0].message.content;\n\nreturn [\n {\n  json: {\n   files: text\n  }\n }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -400
+      ],
+      "id": "6bf7fa03-d691-4435-b986-f3e510ddc5a6",
+      "name": "Parse Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type ",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "JSON",
+        "body": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a senior QA engineer and software tester.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify(\"Analyze the following generated code:\\n\\n\" + JSON.stringify($json.files) + \"\\n\\nIdentify bugs, edge cases, and generate unit tests using Jest. Return JSON with fields: issues, test_cases, suggestions.\") }}\n    }\n  ],\n  \"temperature\": 0.2,\n  \"response_format\": { \"type\": \"json_object\" }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -384,
+        -176
+      ],
+      "id": "3e355f19-1b15-483e-8105-e30627f8e0c6",
+      "name": "Testing Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const content = $json.choices[0].message.content;\n\nlet parsed;\n\ntry {\n  parsed = JSON.parse(content);\n} catch {\n  parsed = {\n    issues: content,\n    test_cases: \"\",\n    suggestions: \"\"\n  };\n}\n\nreturn [\n {\n  json: parsed\n }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        -176
+      ],
+      "id": "eeab317d-b383-4e9e-b8d0-1a8b48d15ae7",
+      "name": "Parse Test Results"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14iT_u0P9rfY6OSefDzX9efnq6rDEyVS0zsNH4z9cZ14",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "QA-LOG",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Requirement": "={{$node[\"Set\"].json[\"requirements\"]}}",
+            "User Stories": "={{$node[\"Parse User Stories\"].json[\"stories\"]}}",
+            "Architecture": "={{$node[\"Parse Design\"].json[\"design\"]}}",
+            "Generated Code": "={{$node[\"Parse Code\"].json[\"files\"]}}",
+            "Issues": "={{$node[\"Parse Test Results\"].json[\"issues\"]}}",
+            "Test Cases": "={{$node[\"Parse Test Results\"].json[\"test_cases\"]}}",
+            "Suggestions": "={{$node[\"Parse Test Results\"].json[\"suggestions\"]}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Requirement",
+              "displayName": "Requirement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User Stories",
+              "displayName": "User Stories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Architecture",
+              "displayName": "Architecture",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated Code",
+              "displayName": "Generated Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Issues",
+              "displayName": "Issues",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Test Cases",
+              "displayName": "Test Cases",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suggestions",
+              "displayName": "Suggestions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1296,
+        112
+      ],
+      "id": "09b286a3-e8d4-4a03-a10a-684d0fd61652",
+      "name": "SAMVIDA_PROJECT_LOG",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "9SUqv8WlXSdgjogp",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ad3d0a7-1a11-4d95-8999-86b23222d47a",
+              "name": "requirements",
+              "value": "Build a task management web app",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1648,
+        -400
+      ],
+      "id": "fbc2702a-1183-4a20-a358-66ff1e8f2cba",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1djeGl558zp4bJQH24e_o9reuavlOLVsnzLQxprmw1Wg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "user_stories",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{$json.stories[0].id}}",
+            "role": "={{$json.stories[0].role}}",
+            "action": "={{$json.stories[0].action}}",
+            "benefit": "={{$json.stories[0].benefit}}",
+            "priority": "={{$json.stories[0].priority}}",
+            "created_at": "= {{$now}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "action",
+              "displayName": "action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "benefit",
+              "displayName": "benefit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1024,
+        -656
+      ],
+      "id": "fae025a8-a4fa-4a36-a052-af2b043292d9",
+      "name": "CHECK GENERATED",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "9SUqv8WlXSdgjogp",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "14iT_u0P9rfY6OSefDzX9efnq6rDEyVS0zsNH4z9cZ14",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "QA-LOG",
+          "mode": "name"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1120,
+        -192
+      ],
+      "id": "5bbc703a-5e1e-4edf-91cb-b9435ce79289",
+      "name": "Clear sheet",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "9SUqv8WlXSdgjogp",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "94e1160b-8044-43f9-bb3d-190957b8ca70",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "fail",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -768,
+        208
+      ],
+      "id": "809bb67b-1f9d-4b0c-97e0-c62d711a9356",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"model\": \"llama-3.3-70b-versatile\",\n \"messages\": [\n  {\n   \"role\": \"system\",\n   \"content\": \"You are a senior software developer responsible for fixing broken code.\"\n  },\n  {\n   \"role\": \"user\",\n   \"content\": {{ JSON.stringify(\"The following code failed tests.\\n\\nErrors:\\n\" + $json.errors + \"\\n\\nOriginal Code:\\n\" + $node[\"Developer Agent\"].json[\"code\"] + \"\\n\\nFix the code and return the corrected full code only.\") }}\n  }\n ],\n \"temperature\": 0.2\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -400,
+        32
+      ],
+      "id": "77841fc7-5418-44cb-8db1-8d34d7a1c7ae",
+      "name": "FIX AGENT",
+      "alwaysOutputData": true,
+      "retryOnFail": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse User Stories": {
+      "main": [
+        [
+          {
+            "node": "🏗 Design Architect Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CHECK GENERATED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Design": {
+      "main": [
+        [
+          {
+            "node": "Developer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🏗 Design Architect Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Design",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Business Analyst Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse User Stories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Developer Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Code": {
+      "main": [
+        [
+          {
+            "node": "Testing Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Testing Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Test Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Test Results": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "🧠 Business Analyst Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CHECK GENERATED": {
+      "main": [
+        []
+      ]
+    },
+    "Clear sheet": {
+      "main": [
+        [
+          {
+            "node": "SAMVIDA_PROJECT_LOG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "FIX AGENT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clear sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FIX AGENT": {
+      "main": [
+        [
+          {
+            "node": "Testing Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "29c322ec-ff3b-4164-adda-eb1505b45184",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9fda2636356faf8de1c81609d2ba7ce5923545745b5641ebe93e4bd2f3b13c9f"
+  },
+  "id": "GlVr9teVXLjfMIDS",
+  "tags": []
+}
